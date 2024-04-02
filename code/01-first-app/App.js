@@ -1,54 +1,47 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, PermissionsAndroid, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, PermissionsAndroid, ImageBackground } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
+import { useState, useEffect } from 'react';
 
 import StartGameScreen from './screens/StartGameScreen';
+import GameScreen from './screens/GameScreen';
+import Colors from './constants/colors'
+import GameOverScreen from './screens/GameOverScreen';
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState();
+  const [gameIsOver, setGameIsOver] = useState(true);
 
-  async function checkPermission() {
-    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.DETECT_SCREEN_CAPTURE);
-    return hasPermission;
+  let screen = <StartGameScreen onPickNumber={pickedNumberHandler}/>;
+
+  function pickedNumberHandler(pickedNumber) {
+    setUserNumber(pickedNumber);
+    setGameIsOver(false);
   }
 
-  async function requestPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.DETECT_SCREEN_CAPTURE,
-        {
-          title: "Screen Capture Detection Permission",
-          message: "This app needs access to detect screen capture.",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can detect screen capture");
-      } else {
-        console.log("Screen capture detection permission denied");
-      }
-    } catch (err) {
-      console.warn(err);
-    }
+  function gameOverHandler() {
+    setGameIsOver(true);
   }
-  
-  async function handlePermission() {
-    const hasPermission = await checkPermission();
-    if (!hasPermission) {
-      await requestPermission();
-    }
+
+  if(userNumber) {
+    screen = <GameScreen userNumber={userNumber} onGameOver={gameOverHandler}/>;
+  }
+
+  if(gameIsOver && userNumber) {
+    screen = <GameOverScreen />
   }
 
   return (
     <LinearGradient 
-      colors={['#ddb52f', '#4e0329']}
+      colors={[Colors.accent500, Colors.primary]}
       style={styles.rootScreen}>
         <ImageBackground 
           source={require('./assets/background.png')} resizeMode="cover"
           style={styles.rootScreen}
           imageStyle={styles.backgroundImage}>
-          <StartGameScreen />
+          <SafeAreaView style={styles.rootScreen}>
+            {screen}
+          </SafeAreaView>
         </ImageBackground>
     </LinearGradient>
   );
