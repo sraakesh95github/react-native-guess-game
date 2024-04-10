@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "RNCourse",
+    "name": "SR Number Guess",
     "slug": "RNCourse",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,19 +17,28 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "buildNumber": "1.0.0",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sraakesh1995.SRNumberGuess"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.sraakesh1995.SRNumberGuess"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9c628600-aa1c-488e-bd74-e6a7b437c831"
+      }
+    }
   }
 }

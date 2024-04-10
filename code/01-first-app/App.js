@@ -1,34 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, PermissionsAndroid, ImageBackground } from 'react-native';
+import { StyleSheet, SafeAreaView, ImageBackground, LayoutAnimation } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
-import AppLoading from 'expo-app-loading';
+// import AppLoading from 'expo-app-loading';
+// import * as SplashScreen from 'expo-splash-screen';
 
 import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import Colors from './constants/colors'
 import GameOverScreen from './screens/GameOverScreen';
+import LoadingPage from './screens/LoadingPage';
+import TriviaScreen from './screens/TriviaScreen';
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
   const [guessRounds, setGuessRounds] = useState(0);
+  // const [appIsReady, setAppIsReady] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
 
-  let screen = <StartGameScreen onPickNumber={pickedNumberHandler}/>;
+  let screen = <StartGameScreen onPickNumber={pickedNumberHandler} onStartQuiz={startQuizHandler}/>;
 
   const [fontsLoaded] = useFonts({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });
 
+  if (quizStarted) {
+    screen = <TriviaScreen onAnswerSelected={answerSelectedHandler} />;
+  }
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return <LoadingPage />; // or your custom loading view
+  }
+
+  function answerSelectedHandler(answer) {
+    // Handle the answer selection here
+    console.log(answer);
+    // You may want to setQuizStarted(false) here or navigate to another screen
   }
 
   function pickedNumberHandler(pickedNumber) {
     setUserNumber(pickedNumber);
     setGameIsOver(false);
+  }
+
+  function startQuizHandler() {
+    setQuizStarted(true);
   }
 
   function gameOverHandler(numberOfRounds) {

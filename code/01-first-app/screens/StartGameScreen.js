@@ -7,7 +7,7 @@ import Title from '../components/ui/Title';
 import Card from '../components/ui/Card';
 import InstructionText from '../components/ui/InstructionText';
 
-function StartGameScreen({onPickNumber}) {
+function StartGameScreen({onPickNumber, onStartQuiz}) {
 
     const [enteredNumber, setEnteredNumber] = useState('');
 
@@ -24,6 +24,11 @@ function StartGameScreen({onPickNumber}) {
         }
 
         onPickNumber(chosenNumber);
+    }
+
+    function startQuizHandler() {
+        onStartQuiz();
+        console.log("Start quiz button pressed...");
     }
 
     function resetInputHandler() {
@@ -53,6 +58,10 @@ function StartGameScreen({onPickNumber}) {
 
             <View style={styles.buttonContainer}>
                 <PrimaryButton onPress={confirmInputHandler}> Confirm </PrimaryButton>
+            </View>
+
+            <View style={styles.buttonContainer}>
+                <PrimaryButton onPress={startQuizHandler}>Start Quiz</PrimaryButton>
             </View>
         </View>
 
